@@ -17,7 +17,7 @@ namespace Obfuscar.Editor
         [SerializeField] 
         private string _obfuscarXmlFileSaveName = "obfuscar.xml";
         
-        public string AssemblySearchPath = "$(InPath)\\Builds\\Game_Data\\Managed\\";
+        public string[] AssemblySearchPaths = new[] { "$(InPath)\\Builds\\Game_Data\\Managed\\" };
         public string[] ObfuscarModules = new[] { "$(InPath)\\Builds\\Game_Data\\Managed\\Game.dll" };
         [SerializeField]
         private string[] _obfuscarModuleIgnoreAttributes = new[] { nameof(SerializeField) };
@@ -55,10 +55,13 @@ namespace Obfuscar.Editor
                             obfuscator.AppendChild(moduleNode);
                         }
                         break;
-                    case nameof(AssemblySearchPath):
-                        var searchPathNode = xml.CreateElement(nameof(AssemblySearchPath));
-                        searchPathNode.SetAttribute("path", AssemblySearchPath);
-                        obfuscator.AppendChild(searchPathNode);
+                    case nameof(AssemblySearchPaths):
+                        foreach (var path in AssemblySearchPaths)
+                        {
+                            var searchPathNode = xml.CreateElement("AssemblySearchPath");
+                            searchPathNode.SetAttribute("path", path);
+                            obfuscator.AppendChild(searchPathNode);
+                        }
                         break;
                 }
             }
